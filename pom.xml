@@ -10,11 +10,11 @@
     <version>1.0-SNAPSHOT</version>
 
     <modules>
-        <module>dead-letter-queue</module>
-        <module>rabbitmq-instance</module>
-        <module>rabbitmq-ldempotentity</module>
-        <module>springboot-rabbit-consumer</module>
-        <module>springboot-rabbit-producer</module>
+        <module>dead-letter-queue</module>  <!--死信队列-->
+        <module>rabbitmq-instance</module>   <!--消息队列示例-->
+        <module>rabbitmq-ldempotentity</module>   <!--消息重试机制急幂等性问题与解决方案-->
+        <module>springboot-rabbit-consumer</module>   <!--消费者-->
+        <module>springboot-rabbit-producer</module>   <!--生产者-->
     </modules>
 
     <properties>
