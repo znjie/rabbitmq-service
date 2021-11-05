@@ -1,0 +1,30 @@
+spring:
+
+  aop:
+    proxy-target-class: true
+  mvc:
+    static-path-pattern: /**
+
+  datasource:
+    url: 'jdbc:mysql://119.23.36.86:3306/rabbitmq?useUnicode=true&characterEncoding=UTF-8&serverTimezone=UTC&useSSL=false'
+    username: 'root'
+    password: 'suncompass123456'
+    driver-class-name: 'com.mysql.cj.jdbc.Driver'
+  jackson:
+    date-format: 'yyyy-MM-dd HH:mm:ss'
+    time-zone: GMT+8
+
+mybatis-plus:
+  mapper-locations: 'classpath*:mapper/*Mapper.xml'
+  type-aliases-package: 'com.chuansen.system.entity'
+
+  rabbit:
+    host: localhost
+    port: 5672
+    username: guest
+    password: guest
+    virtual-host: /meiteVirtualHosts
+
+logging:
+  level:
+    com.chuansen: debug
