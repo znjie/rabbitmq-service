@@ -22,9 +22,9 @@ public class OrderConsumer {
 
     public static void main(String[] args) throws IOException, TimeoutException {
         System.out.println("订单消费者...");
-        // 创建连接
+
         Connection connection = RabbitMQConnection.getConnection();
-        // 创建通道
+
         final Channel channel = connection.createChannel();
         // 队列需要去关联交换机
         channel.queueBind(QUEUE_NAME, EXCHANGE_NAME, "");

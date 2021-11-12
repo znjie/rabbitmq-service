@@ -14,8 +14,6 @@ public class Consumer {
         Connection connection = RabbitMQConnection.getConnection();
         // 2.设置通道
         final Channel channel = connection.createChannel();
-        // 声明队列【参数说明：参数一：队列名称，参数二：是否持久化；参数三：是否独占模式；参数四：消费者断开连接时是否删除队列；参数五：消息其他参数】
-        //channel.queueDeclare(QUEUE_NAME, false, false, false, null);
         // 3.创建订阅器，并接受消息
         DefaultConsumer defaultConsumer = new DefaultConsumer(channel) {
             @Override

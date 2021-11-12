@@ -17,9 +17,9 @@ public class Producer {
     private static final String EXCHANGE_NAME = "fanout_exchange";
 
     public static void main(String[] args) throws IOException, TimeoutException {
-        //  创建Connection
+
         Connection connection = RabbitMQConnection.getConnection();
-        // 创建Channel
+
         Channel channel = connection.createChannel();
         // 通道关联交换机 【参数说明：参数一：交换器的名称，参数二：交换器的类型, 常见类型有fanout, direct, topic, headers；参数三：是否独占模式；设置是否持久化, 】
         channel.exchangeDeclare(EXCHANGE_NAME, BuiltinExchangeType.FANOUT, true);

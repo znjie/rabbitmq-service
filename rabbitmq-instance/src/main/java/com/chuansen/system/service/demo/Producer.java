@@ -16,12 +16,10 @@ public class Producer {
     private static final String QUEUE_NAME = "chuansen_queue";
 
     public static void main(String[] args) throws IOException, TimeoutException {
-        //1.创建一个新连接
+        //1.连接mq
         Connection connection = RabbitMQConnection.getConnection();
         //2.创建通道  设置channel
         Channel channel = connection.createChannel();
-        // 声明队列【参数说明：参数一：队列名称，参数二：是否持久化；参数三：是否独占模式；参数四：消费者断开连接时是否删除队列；参数五：消息其他参数】
-        //channel.queueDeclare(QUEUE_NAME, false, false, false, null);
         //3.发送消息
         String msg = "6666";
 
