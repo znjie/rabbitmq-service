@@ -1,5 +1,6 @@
 package com.chuansen.system.controller;
 
+import com.chuansen.system.config.RabbitMQConfig;
 import com.chuansen.system.entity.Order;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.amqp.core.Message;
@@ -31,7 +32,7 @@ public class ProducerController {
                 "测试商品",2,102.11,"广州市天河区体育中心金中环大厦A座35楼3501");
         try {
             System.out.println("发送订单实体对象"+order.toString());
-            rabbitTemplate.setExchange("springboot_rabbit_exchange");
+            rabbitTemplate.setExchange(RabbitMQConfig.EXCHANGE_SPRINGBOOT_NAME);
             rabbitTemplate.setMessageConverter(new Jackson2JsonMessageConverter());
             Message msg = MessageBuilder.withBody(objectMapper.writeValueAsBytes(order)).setDeliveryMode(MessageDeliveryMode.NON_PERSISTENT).build();
             rabbitTemplate.convertAndSend(msg);

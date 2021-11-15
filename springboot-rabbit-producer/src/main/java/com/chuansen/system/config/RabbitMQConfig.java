@@ -12,15 +12,15 @@ public class RabbitMQConfig {
     /**
      * 定义交换机
      */
-    private String EXCHANGE_SPRINGBOOT_NAME = "springboot_rabbit_exchange";
+    public final static String EXCHANGE_SPRINGBOOT_NAME = "springboot_rabbit_exchange";
     /**
      * 订单队列
      */
-    private String ORDER_QUEUE = "springboot_rabbit_order_queue";
+    public final static String ORDER_QUEUE = "springboot_rabbit_order_queue";
     /**
      * 库存队列
      */
-    private String STOCK_QUEUE = "springboot_rabbit_stock_queue";
+    public final static String STOCK_QUEUE = "springboot_rabbit_stock_queue";
 
     //配置订单队列
     @Bean

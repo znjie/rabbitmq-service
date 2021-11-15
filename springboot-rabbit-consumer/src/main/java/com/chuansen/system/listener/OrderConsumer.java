@@ -1,6 +1,7 @@
 package com.chuansen.system.listener;
 
 import com.chuansen.system.entity.Order;
+import com.chuansen.system.util.Constant;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +17,7 @@ public class OrderConsumer {
     @Autowired
     private ObjectMapper objectMapper;
 
-    @RabbitListener(queues = "springboot_rabbit_order_queue")
+    @RabbitListener(queues = Constant.STOCK_QUEUE)
     public void OrderData(@Payload byte[] message) {
         try {
             Order entity = objectMapper.readValue(message, Order.class);
