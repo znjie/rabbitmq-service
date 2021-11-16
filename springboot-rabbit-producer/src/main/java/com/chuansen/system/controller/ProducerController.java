@@ -27,7 +27,6 @@ public class ProducerController {
 
     @RequestMapping("/sendMag")
     public ResponseEntity sendMag(){
-        ResponseEntity responseEntity=new ResponseEntity(HttpStatus.OK);
         Order order= new Order(UUID.randomUUID().toString(),new Date().toInstant(),null,(UUID.randomUUID().toString()+System.currentTimeMillis()),
                 "测试商品",2,102.11,"广州市天河区体育中心金中环大厦A座35楼3501");
         try {
@@ -39,6 +38,6 @@ public class ProducerController {
         } catch (Exception e) {
             System.out.println("发送消息异常:"+e.fillInStackTrace());
         }
-        return responseEntity;
+        return new ResponseEntity(HttpStatus.OK);
     }
 }

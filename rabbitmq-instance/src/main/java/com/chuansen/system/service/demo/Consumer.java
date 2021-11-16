@@ -1,13 +1,13 @@
 package com.chuansen.system.service.demo;
 
 import com.chuansen.system.service.RabbitMQConnection;
+import com.chuansen.system.service.util.Constant;
 import com.rabbitmq.client.*;
 
 import java.io.IOException;
 import java.util.concurrent.TimeoutException;
 
 public class Consumer {
-    private static final String QUEUE_NAME = "chuansen_queue";
 
     public static void main(String[] args) throws IOException, TimeoutException {
         // 1.创建连接
@@ -25,6 +25,6 @@ public class Consumer {
             }
         };
         // 4.监听队列
-        channel.basicConsume(QUEUE_NAME, false, defaultConsumer);
+        channel.basicConsume(Constant.DEMO_QUEUE_NAME, false, defaultConsumer);
     }
 }

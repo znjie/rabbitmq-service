@@ -1,5 +1,6 @@
 package com.chuansen.system.service.demo;
 import com.chuansen.system.service.RabbitMQConnection;
+import com.chuansen.system.service.util.Constant;
 import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Connection;
 
@@ -8,28 +9,34 @@ import java.util.concurrent.TimeoutException;
 
 /**
  * 生产者
- * 确保消息发送成功两种方式
- * 方式一：直接返回结果 channel.confirmSelect();   channel.waitForConfirms();
- * 方式二：事务性返回并回滚  channel.txSelect();    channel.txCommit();提交  判断channel不等于null，就进行channel.txRollback();进行回滚
  */
+@SuppressWarnings("all")
 public class Producer {
-    private static final String QUEUE_NAME = "chuansen_queue";
 
     public static void main(String[] args) throws IOException, TimeoutException {
+        //  run_1();
+        run_2();
+    }
+
+    /**
+     * 方式一: 通过发送方确认机制实现  channel.confirmSelect();   channel.waitForConfirms();
+     * @throws IOException
+     * @throws TimeoutException
+     */
+    public static void run_1() throws IOException, TimeoutException {
         //1.连接mq
         Connection connection = RabbitMQConnection.getConnection();
         //2.创建通道  设置channel
         Channel channel = connection.createChannel();
         //3.发送消息
-        String msg = "6666";
+        String msg = "正在测试发送消息";
 
-        //方式一：返回消息确认机制时需要调该方法进行选择
+        //开启confirm模式
         channel.confirmSelect();
 
         // 发送内容【参数说明：参数一：交换机名称；参数二：队列名称，参数三：消息的其他属性-routing headers，此属性为MessageProperties.PERSISTENT_TEXT_PLAIN用于设置纯文本消息存储到硬盘；参数四：消息主体】
-        channel.basicPublish("", QUEUE_NAME, null, msg.getBytes());
+        channel.basicPublish("", Constant.DEMO_QUEUE_NAME, null, msg.getBytes());
         try {
-            //消息同步确认机制，可能会阻塞
             boolean result=channel.waitForConfirms();
             if (result){
                 System.out.println("消息投递成功");
@@ -39,6 +46,38 @@ public class Producer {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
+        channel.close();
+        connection.close();
+    }
+
+    /**
+     * 方式二: 通过事务机制实现 (事务性返回并回滚  channel.txSelect();    channel.txCommit();提交  判断channel不等于null，就进行channel.txRollback();进行回滚)
+     * @throws IOException
+     * @throws TimeoutException
+     */
+    public static void run_2() throws IOException, TimeoutException {
+        //1.连接mq
+        Connection connection = RabbitMQConnection.getConnection();
+        //2.创建通道  设置channel
+        Channel channel = connection.createChannel();
+
+        String msg = "通过事务机制实现生产着发送消息[%d]";
+
+        //channel开启事务
+        channel.txSelect();
+
+        channel.basicPublish("", Constant.DEMO_QUEUE_NAME,  null, String.format(msg,1).getBytes());
+        channel.basicPublish("", Constant.DEMO_QUEUE_NAME,  null, String.format(msg,2).getBytes());
+        channel.basicPublish("", Constant.DEMO_QUEUE_NAME,  null, String.format(msg,3).getBytes());
+
+        //消息回滚
+        channel.txRollback();
+
+        channel.basicPublish("", Constant.DEMO_QUEUE_NAME,   null, String.format(msg,4).getBytes());
+
+        //提交事务
+        channel.txCommit();
+
         channel.close();
         connection.close();
     }

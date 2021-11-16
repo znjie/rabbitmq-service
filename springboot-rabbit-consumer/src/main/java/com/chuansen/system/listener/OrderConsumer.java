@@ -17,7 +17,7 @@ public class OrderConsumer {
     @Autowired
     private ObjectMapper objectMapper;
 
-    @RabbitListener(queues = Constant.STOCK_QUEUE)
+    @RabbitListener(queues = Constant.ORDER_QUEUE)
     public void OrderData(@Payload byte[] message) {
         try {
             Order entity = objectMapper.readValue(message, Order.class);
