@@ -4,14 +4,20 @@ import com.chuansen.system.config.RabbitMQConfig;
 import com.chuansen.system.entity.Order;
 import com.chuansen.system.service.OrderService;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.rabbitmq.client.Channel;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.amqp.core.Message;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 
 import java.io.IOException;
+import java.util.Objects;
 
 @Component
+@Slf4j
 public class ConsumerController {
 
     @Autowired
@@ -34,13 +40,28 @@ public class ConsumerController {
      * @param message
      */
     @RabbitListener(queues = RabbitMQConfig.ORDER_QUEUE)
-    public void OrderData(@Payload byte[] message) {
+    public void OrderData(@Payload byte[] orderEntity, Message message, Channel channel) {
         try {
-            Order entity = objectMapper.readValue(message, Order.class);
+            Order entity = objectMapper.readValue(orderEntity, Order.class);
             System.out.println("Order接收消息：" + entity.toString());
+            if(StringUtils.hasText(entity.getId())){
+                return;
+            }
+            Order newOrder=orderService.getById(entity.getId());
+            if(Objects.nonNull(newOrder)){
+                //数据库存在，则不需要重试
+                log.info("该记录已经被消费过，无需重复消费");
+                //消费者完成 通知服务器从队列中删除该消息
+                channel.basicAck(message.getMessageProperties().getDeliveryTag(), false);
+                return;
+            }
             orderService.save(entity);
+
+            //例如：
+            //int i=1/0;
         } catch (IOException e) {
             e.printStackTrace();
+            //将失败的消息记录下来，后期采用人工补偿形式
         }
     }
 }

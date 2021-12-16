@@ -14,7 +14,7 @@ import java.util.concurrent.TimeoutException;
 public class Producer {
 
     public static void main(String[] args) throws IOException, TimeoutException {
-        //  run_1();
+          //run_1();
         run_2();
     }
 
@@ -65,14 +65,11 @@ public class Producer {
 
         //channel开启事务
         channel.txSelect();
-
+        //消息回滚
+        channel.txRollback();
         channel.basicPublish("", Constant.DEMO_QUEUE_NAME,  null, String.format(msg,1).getBytes());
         channel.basicPublish("", Constant.DEMO_QUEUE_NAME,  null, String.format(msg,2).getBytes());
         channel.basicPublish("", Constant.DEMO_QUEUE_NAME,  null, String.format(msg,3).getBytes());
-
-        //消息回滚
-        channel.txRollback();
-
         channel.basicPublish("", Constant.DEMO_QUEUE_NAME,   null, String.format(msg,4).getBytes());
 
         //提交事务

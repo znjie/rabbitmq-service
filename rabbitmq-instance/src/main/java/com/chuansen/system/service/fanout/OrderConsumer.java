@@ -30,6 +30,5 @@ public class OrderConsumer {
         };
         // 开始监听消息 自动签收
         channel.basicConsume(Constant.FANOUT_ORDER_QUEUE_NAME, true, defaultConsumer);
-
     }
 }
