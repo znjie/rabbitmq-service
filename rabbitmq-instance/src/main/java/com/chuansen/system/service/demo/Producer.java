@@ -65,8 +65,7 @@ public class Producer {
 
         //channel开启事务
         channel.txSelect();
-        //消息回滚
-        channel.txRollback();
+
         channel.basicPublish("", Constant.DEMO_QUEUE_NAME,  null, String.format(msg,1).getBytes());
         channel.basicPublish("", Constant.DEMO_QUEUE_NAME,  null, String.format(msg,2).getBytes());
         channel.basicPublish("", Constant.DEMO_QUEUE_NAME,  null, String.format(msg,3).getBytes());
@@ -74,6 +73,8 @@ public class Producer {
 
         //提交事务
         channel.txCommit();
+        //消息回滚
+        channel.txRollback();
 
         channel.close();
         connection.close();
